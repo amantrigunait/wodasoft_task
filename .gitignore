@@ -1,0 +1,10 @@
+*.log
+*.pyc
+*.env
+.vscode
+migrations
+media
+staticfiles
+staticfiles/*
+logs
+db.sqlite3
