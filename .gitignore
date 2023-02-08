@@ -7,4 +7,3 @@ media
 staticfiles
 staticfiles/*
 logs
-db.sqlite3
