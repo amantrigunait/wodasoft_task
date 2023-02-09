@@ -43,7 +43,8 @@ class ArticleForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         instance = kwargs.get('instance')
         if instance:
-            # get default_json_field from models.py
+            # below line is used to create updated_json_field from instance. This is to handle scenario wherein 
+            # LANGUAGES in settings.py is changed (new language is added or removed).
             default_json_field=default_language_dict()
             updated_json_field = {key: instance.title.get(key, '') for key in default_json_field}
             self.fields['title'].widget = JSONFieldWidgetModifier(json_field=updated_json_field)
@@ -69,7 +70,8 @@ class BlogForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         instance = kwargs.get('instance')
         if instance:
-            # get default_json_field from models.py
+            # below line is used to create updated_json_field from instance. This is to handle scenario wherein 
+            # LANGUAGES in settings.py is changed (new language is added or removed).
             default_json_field=default_language_dict()
             updated_json_field = {key: instance.blog_title.get(key, '') for key in default_json_field}
             self.fields['blog_title'].widget = JSONFieldWidgetModifier(json_field=updated_json_field)
