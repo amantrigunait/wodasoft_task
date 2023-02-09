@@ -1,1 +1,1 @@
-### THE Explnation is the file explanation.txt
+### The Explanation is the file explanation.txt
