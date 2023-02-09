@@ -1,0 +1,70 @@
+################################################ Task 1 ################################################
+
+My Thoughts on the solution :
+
+1- One of cons of using JSONField in this scenario I can think of is : If the JSON data is large, indexing it might not be as performant as compared to other fields.
+2- Another con is from practical point of view : If we use any analytics tool like (METABASE, REBASE, GARFANA), SQL queries gets way too complex to write and maintain in case of JSONField.
+
+# spent time : 5 hour
+
+################################################ Task 2 ################################################
+
+Possible approach(s) is as mentioned below :
+
+1. APPROACH 1 : If number of nodes are small. We can simply have a self referencing foreign key to the same model where child nodes are linked to their parent node. 
+
+CONS : To fetch all descendants of a node, we will have to recursively fetch all the children of the node. This can be a problem if the number of nodes are large.
+
+# models.py
+class TreeNode(models.Model):
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, related_name='children')
+    data = models.CharField(verbose_name="Node data", max_length=100
+
+To calculate the number of descendants of a node, we can fetch all the children of the node and recursively call the same :
+
+To get total number descendants of a node, we can do a query :
+def get_total_descendants_count(node):
+    total = 0
+    children = TreeNode.objects.filter(parent=node)
+    for child in children:
+        total += 1
+        total += get_total_descendants(child)
+    return total
+
+-------------------------------------------------------------------------------
+
+2. APPROACH 2 : If number of nodes are large, we can use nested set model. 
+
+CONS : However, this approach is not very good if there are very frequent updates to the tree structure i.e. if we have to add/remove nodes very frequently. In that case, we will have to update the left and right values of all the nodes in the tree structure.
+
+# models.py
+class TreeNode(models.Model):
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, related_name='children')
+    left = models.IntegerField(verbose_name="Left value")
+    right = models.IntegerField(verbose_name="Right value")
+    data = models.CharField(verbose_name="Node data", max_length=100)
+
+Assuming We have tree structure wherein :
+
+Node A is the root node
+Node B is the child of Node A
+Node D is the child of Node B
+Node E is the child of Node B
+Node C is the child of Node A
+
+The left and right values for the above tree structure will be as follows :
+
+Node A : left = 1, right = 10
+Node B : left = 2, right = 7
+Node D : left = 3, right = 4
+Node E : left = 5, right = 6
+Node C : left = 8, right = 9
+
+## 1A [(2B,[ (3D,4D) ,(5E,6E)],7B), (8C,9C)] 10A
+
+To calculate the number of descendants of a node, we can do a query :
+def get_total_descendants_count(node):
+    return TreeNode.objects.filter(left__gt=node.left, right__lt=node.right).count()
+
+# spent time : 2 hour
+It was fun to learn and understand the concept of the NSM approach. I have never used it before.
