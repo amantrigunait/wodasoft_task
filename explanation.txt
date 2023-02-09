@@ -1,5 +1,7 @@
 ################################################ Task 1 ################################################
 
+I have included an additional model "Blog" to demonstrate that that JSONFieldModifier can be easily extended to any JSONField.
+
 My Thoughts on the solution :
 
 1- One of cons of using JSONField in this scenario I can think of is : If the JSON data is large, indexing it might not be as performant as compared to other fields.
