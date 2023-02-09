@@ -2,7 +2,6 @@
 *.pyc
 *.env
 .vscode
-migrations
 media
 staticfiles
 staticfiles/*
