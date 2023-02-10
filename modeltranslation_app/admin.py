@@ -29,7 +29,7 @@ class JSONFieldModifier(forms.Field):
     def __init__(self, *args, **kwargs):
         default_json_field = kwargs.pop('json_field', {})
         super().__init__(*args, **kwargs)
-        self.widget = JSONFieldWidgetModifier(json_field=kwargs.get('json_field', default_json_field))
+        self.widget = JSONFieldWidgetModifier(json_field=default_json_field)
 
 
 class ArticleForm(forms.ModelForm):
