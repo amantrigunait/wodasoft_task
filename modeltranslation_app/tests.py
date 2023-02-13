@@ -1,6 +1,6 @@
 from django.test import TestCase
 from .models import Article
-from .admin import ArticleAdmin, ArticleForm, JSONFieldModifier, JSONFieldWidgetModifier
+from .admin import ArticleAdmin, ArticleForm, JSONFieldModifier, JSONFieldModifierWidget
 from django.conf import settings
 
 class ArticleModelTestCase(TestCase):
@@ -40,18 +40,18 @@ class ArticleFormTestCase(TestCase):
         self.assertFalse(form.is_valid())
 
 
-class JSONFieldWidgetModifierTestCase(TestCase):
+class JSONFieldModifierWidgetTestCase(TestCase):
     def test_render(self):
         """
         Test that the widget renders multiple input fields for each language
         """
-        widget = JSONFieldWidgetModifier(json_field={'en': 'Test title in English', 'fr': 'Titre de test en français'})
+        widget = JSONFieldModifierWidget(json_field={'en': 'Test title in English', 'fr': 'Titre de test en français'})
         html = widget.render('title', None)
         self.assertInHTML('<input type="text" name="title_en" value="Test title in English">', html)
         self.assertInHTML('<input type="text" name="title_fr" value="Titre de test en français">', html)
     
     def test_value_from_datadict(self):
-        widget = JSONFieldWidgetModifier(json_field={'en': 'Test title in English'})
+        widget = JSONFieldModifierWidget(json_field={'en': 'Test title in English'})
         data = {'title_en': 'Updated test title in English'}
         value = widget.value_from_datadict(data, None, 'title')
         self.assertEqual(value, {'en': 'Updated test title in English'})
